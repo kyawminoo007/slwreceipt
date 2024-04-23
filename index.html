@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SLW Receipt</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        #thermal-pos {
+            width: 80mm; /* Adjust the width as per your printer paper size */
+            margin: 0 auto;
+            font-size: 3mm;
+        }
+
+        #thermal-pos table {
+            width: 100%;
+            border-collapse: Nill;
+        }
+
+        #thermal-pos th, #thermal-pos td {
+            border: none solid #ddd;
+            padding: 1px;
+            text-align: left;
+        }
+        /* Remove borders and background color */
+        #thermal-pos table,
+        #thermal-pos th,
+        #thermal-pos td {
+        border: none;
+        background-color: transparent;
+        }
+
+        #thermal-pos th {
+            background-color: transparent;
+            color: black;
+        }
+
+  #thermal-pos .logo {
+        text-align: center;
+      }
+  #thermal-pos .slogan {
+        text-align: center;
+      }
+
+        #thermal-pos tr:nth-child(even) {
+            background-color: transparent;
+        }
+
+        #thermal-pos tr:hover {
+            background-color: transparent;
+        }
+
+        /* Adjust the font size for the receipt */
+        #thermal-pos th, #thermal-pos td {
+            font-size: 3mm;
+        }
+
+        /* Right align the subtotal */
+        .subtotal {
+            text-align: right;
+        }
+
+        /* Left align the quantity x price */
+        .qty-price {
+            text-align: left;
+        }
+
+        /* Additional styles for the clinic, address, and contact */
+        #clinic-info {
+            margin-bottom: 10px;
+        }
+
+        #clinic-info h2 {
+            margin: 0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        #clinic-info p {
+            margin: 0;
+            font-size: 12px;
+            text-align: center;
+        }
+        /* Right align the subtotal */
+       .subtotal,
+       .right-align {
+       text-align: right;
+       }
+        
+
+    </style>
+</head>
+<body>
+    <div id="thermal-pos">
+        <!-- Clinic information -->
+<div class= "logo">
+<img alt="" src="https://acortar.link/gWulbE"
+ style="width: 100px; height: 100px; title=""> </div>
+        <div id="clinic-info">
+            <h2>Sane Lae Wai Specialist Clinic</h2>
+            <p>No(186)၊ Bogyoke Road၊ Shwe Pyi Thar City</p>
+            <p>09-885995511 / 09-885995522</p>
+        </div>
+
+        <!-- Your receipt content will be dynamically generated here -->
+        <table>
+            <!-- Receipt items -->
+        </table>
+    </div>
+
+    <script>
+        // Parse the query parameters to get the data for the receipt
+        const urlParams = new URLSearchParams(window.location.search);
+        const invoice = urlParams.get('invoice');
+        const date = urlParams.get('date');
+        const customer = urlParams.get('customer');
+        const doctor = urlParams.get('doctor');
+        const cashier = urlParams.get('cashier');
+        const clinic = urlParams.get('clinic');
+        const address = urlParams.get('address');
+        const contact = urlParams.get('contact');
+        const total = urlParams.get('total');
+        const payment = urlParams.get('payment');
+        const balance = urlParams.get('balance');
+        const items = urlParams.get('items').split(',');
+        const prices = urlParams.get('price').split(',');
+        const quantities = urlParams.get('qty').split(',');
+        const subtotals = urlParams.get('sub_total').split(',');
+
+        // Create an array to hold the items
+        const result = [];
+
+        // Iterate over the items to create objects and push them into the result array
+        items.forEach((value, id) => {
+            result[id] = {
+                item: items[id],
+                price: prices[id],
+                qty: quantities[id],
+                sub_total: subtotals[id]
+            };
+        });
+
+        // Render the clinic information
+        const clinicInfo = document.getElementById('clinic-info');
+        clinicInfo.innerHTML = `
+            <h2>${clinic}</h2>
+            <p>${address}</p>
+            <p>${contact}</p>
+        `;
+        // Render the receipt using the result array
+const thermalPos = document.getElementById('thermal-pos');
+const table = document.createElement('table');
+result.forEach(row => {
+    const trItem = document.createElement('tr');
+    const tdItem = document.createElement('td');
+    tdItem.textContent = row.item;
+    trItem.appendChild(tdItem);
+
+    const tdSubTotal = document.createElement('td');
+    tdSubTotal.textContent = 'K' + row.sub_total;
+    tdSubTotal.classList.add('subtotal'); // Add the subtotal class
+    tdSubTotal.style.textAlign = 'right'; // Set text alignment to right
+    trItem.appendChild(tdSubTotal);
+
+    table.appendChild(trItem);
+
+    const trQtyPrice = document.createElement('tr');
+    const tdQtyPrice = document.createElement('td');
+    tdQtyPrice.textContent = row.qty + ' x ' + row.price;
+    tdQtyPrice.classList.add('qty-price');
+    trQtyPrice.appendChild(tdQtyPrice);
+    table.appendChild(trQtyPrice);
+});
+thermalPos.appendChild(table);
+
+// Add total, payment, and balance to the receipt
+const totalRow = document.createElement('tr');
+const tdTotalLabel = document.createElement('th');
+tdTotalLabel.textContent = 'Total';
+const tdTotalValue = document.createElement('td');
+tdTotalValue.textContent = total;
+tdTotalValue.style.textAlign = 'right'; // Set text alignment to right
+totalRow.appendChild(tdTotalLabel);
+totalRow.appendChild(tdTotalValue);
+table.appendChild(totalRow);
+
+const paymentRow = document.createElement('tr');
+const tdPaymentLabel = document.createElement('th');
+tdPaymentLabel.textContent = 'Payment';
+const tdPaymentValue = document.createElement('td');
+tdPaymentValue.textContent = payment;
+tdPaymentValue.style.textAlign = 'right'; // Set text alignment to right
+paymentRow.appendChild(tdPaymentLabel);
+paymentRow.appendChild(tdPaymentValue);
+table.appendChild(paymentRow);
+
+const balanceRow = document.createElement('tr');
+const tdBalanceLabel = document.createElement('th');
+tdBalanceLabel.textContent = 'Balance';
+const tdBalanceValue = document.createElement('td');
+tdBalanceValue.textContent = balance;
+tdBalanceValue.style.textAlign = 'right'; // Set text alignment to right
+balanceRow.appendChild(tdBalanceLabel);
+balanceRow.appendChild(tdBalanceValue);
+table.appendChild(balanceRow);
+
+const sloganRow = document.createElement('tr');
+const tdSloganLabel = document.createElement('th');
+tdSloganLabel.textContent = 'ကျန်းမာသုခ';
+tdSloganLabel.style.textAlign = 'right'; // Set text alignment to right
+const tdSloganValue = document.createElement('td');
+tdSloganValue.textContent = "အမြဲပြည့်ဝစေ စိမ်းလဲ့ဝေ";
+tdSloganValue.style.textAlign = 'left'; // Set text alignment to left
+tdSloganValue.style.fontWeight = 'bold'; 
+sloganRow.appendChild(tdSloganLabel);
+sloganRow.appendChild(tdSloganValue);
+table.appendChild(sloganRow);
+
+
+        // Add the footer
+const footerTable = document.createElement('table');
+const footerRow = document.createElement('tr');
+const tdDate = document.createElement('td');
+tdDate.textContent = date;
+const tdInvoice = document.createElement('td');
+tdInvoice.textContent = invoice;
+tdInvoice.style.textAlign = 'right'; // Set text alignment to right
+footerRow.appendChild(tdDate);
+footerRow.appendChild(tdInvoice);
+footerTable.appendChild(footerRow);
+thermalPos.appendChild(footerTable);
+
+        // Add customer information
+        const customerTable = document.createElement('table');
+        const customerRow = document.createElement('tr');
+        const tdCustomerLabel = document.createElement('th');
+        tdCustomerLabel.textContent = 'Customer';
+        const tdCustomerValue = document.createElement('td');
+        tdCustomerValue.textContent = customer;
+        customerRow.appendChild(tdCustomerLabel);
+        customerRow.appendChild(tdCustomerValue);
+        customerTable.appendChild(customerRow);
+
+        thermalPos.insertBefore(customerTable, table);
+
+
+        // Add doctor information
+        const doctor Table = document.createElement('table');
+        const doctorRow = document.createElement('tr');
+        const tdDoctorLabel = document.createElement('th');
+        tdDoctorLabel.textContent = 'Doctor';
+        const tdDoctorValue = document.createElement('td');
+        tdDoctorValue.textContent = doctor;
+        doctorRow.appendChild(tdDoctorLabel);
+        doctorRow.appendChild(tdDoctorValue);
+        doctorTable.appendChild(doctorRow);
+
+        thermalPos.insertBefore(doctorTable, table);
+
+
+        // Add cashier information
+        const cashier Table = document.createElement('table');
+        const cashierRow = document.createElement('tr');
+        const tdCashierLabel = document.createElement('th');
+        tdCashierLabel.textContent = 'Cashier';
+        const tdCashierValue = document.createElement('td');
+        tdCashierValue.textContent = cashier;
+        cashierRow.appendChild(tdCashierLabel);
+        cashierRow.appendChild(tdCashierValue);
+        cashierTable.appendChild(cashierRow);
+
+        thermalPos.insertBefore(cashierTable, table);
+
+        // Print the receipt
+        window.print();
+    </script>
+</body>
+</html>
