@@ -247,33 +247,6 @@ thermalPos.appendChild(footerTable);
         thermalPos.insertBefore(customerTable, table);
 
 
-        // Add doctor information
-        const doctor Table = document.createElement('table');
-        const doctorRow = document.createElement('tr');
-        const tdDoctorLabel = document.createElement('th');
-        tdDoctorLabel.textContent = 'Doctor';
-        const tdDoctorValue = document.createElement('td');
-        tdDoctorValue.textContent = doctor;
-        doctorRow.appendChild(tdDoctorLabel);
-        doctorRow.appendChild(tdDoctorValue);
-        doctorTable.appendChild(doctorRow);
-
-        thermalPos.insertBefore(doctorTable, table);
-
-
-        // Add cashier information
-        const cashier Table = document.createElement('table');
-        const cashierRow = document.createElement('tr');
-        const tdCashierLabel = document.createElement('th');
-        tdCashierLabel.textContent = 'Cashier';
-        const tdCashierValue = document.createElement('td');
-        tdCashierValue.textContent = cashier;
-        cashierRow.appendChild(tdCashierLabel);
-        cashierRow.appendChild(tdCashierValue);
-        cashierTable.appendChild(cashierRow);
-
-        thermalPos.insertBefore(cashierTable, table);
-
         // Print the receipt
         window.print();
     </script>
